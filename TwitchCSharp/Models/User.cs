@@ -7,6 +7,10 @@ namespace TwitchCSharp.Models
     [JsonObject("users")]
     public class User : TwitchResponse
     {
+        [JsonProperty("display_name")]
+        public string DisplayName { get; set; }
+        [JsonProperty("_id")]
+        public long Id { get; set; }
         [JsonProperty("name")]
         public string Name { get; set; }
         [JsonProperty("type")]
@@ -17,10 +21,6 @@ namespace TwitchCSharp.Models
         public DateTime UpdatedAt { get; set; }
         [JsonProperty("logo")]
         public string Logo { get; set; }
-        [JsonProperty("_id")]
-        public long Id { get; set; }
-        [JsonProperty("display_name")]
-        public string DisplayName { get; set; }
         [JsonProperty("email")]
         public string Email { get; set; }
         [JsonProperty("partnered")]

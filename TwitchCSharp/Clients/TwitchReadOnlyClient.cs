@@ -15,8 +15,13 @@ namespace TwitchCSharp.Clients
             restClient = new RestClient(url);
             restClient.AddHandler("application/json", new DynamicJsonDeserializer());
             restClient.AddHandler("text/html", new DynamicJsonDeserializer());
+
+            // TODO: Don't know why AddDefaultHeader do not override. So I remove myself first.
+            restClient.RemoveDefaultParameter("Accept");
             restClient.AddDefaultHeader("Accept", TwitchHelper.twitchAcceptHeader);
+
             restClient.AddDefaultHeader("Client-ID", clientID);
+            restClient.AddDefaultHeader("Content-Type", "application/json");
         }
 
         public Channel GetChannel(string channel)

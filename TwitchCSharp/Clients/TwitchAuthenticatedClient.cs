@@ -9,6 +9,7 @@ namespace TwitchCSharp.Clients
     public class TwitchAuthenticatedClient : TwitchReadOnlyClient, ITwitchClient
     {
         private readonly string username;
+        private readonly string id;
 
         public TwitchAuthenticatedClient(string clientId, string oauth) : base(clientId)
         {
@@ -22,6 +23,7 @@ namespace TwitchCSharp.Clients
                 throw new TwitchException("Couldn't get the user name!");
             }
             this.username = user.Name;
+            this.id = user.Id.ToString();
         }
 
         public Channel GetMyChannel()
@@ -36,6 +38,7 @@ namespace TwitchCSharp.Clients
         {
             var request = GetRequest("user", Method.GET);
             var response = restClient.Execute<User>(request);
+
             return response.Data;
         }
 
@@ -57,7 +60,7 @@ namespace TwitchCSharp.Clients
 
         public StreamResult GetMyStream()
         {
-            return GetStream(username);
+            return GetStream(id);
         }
 
         public TwitchList<Block> GetBlocks()
@@ -89,7 +92,7 @@ namespace TwitchCSharp.Clients
         public TwitchList<User> GetChannelEditors()
         {
             var request = GetRequest("channels/{channel}/editors", Method.GET);
-            request.AddUrlSegment("channel", username);
+            request.AddUrlSegment("channel", id);
             var response = restClient.Execute<TwitchList<User>>(request);
             return response.Data;
         }
@@ -97,10 +100,12 @@ namespace TwitchCSharp.Clients
         public Channel Update(string status = null, string game = null, string delay = null)
         {
             var request = GetRequest("channels/{channel}", Method.PUT);
-            request.AddUrlSegment("channel", username);
+            
+            request.AddUrlSegment("channel", id);
             request.RequestFormat = DataFormat.Json;
             request.AddBody(new { channel = new { status, game, delay } });
             var response = restClient.Execute<Channel>(request);
+            //response.Data.Message = response.Content;
             return response.Data;
         }
 
